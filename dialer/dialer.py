@@ -36,9 +36,8 @@ def get_modem_data(modem_version, modem_parity, modem_server_host):
         "bell103-8n1": 224,
         "v22bis-8n1": 225,
     }
-    modem_extension = MODEMS_INDEX[
-        "{}-{}".format(modem_version.lower(), modem_parity.lower())
-    ]
+    modem_extension = MODEMS_INDEX["{}-{}".format(modem_version.lower(),
+                                                  modem_parity.lower())]
     return ModemData(
         "sip:11111",
         "sip:{}@{}".format(modem_extension, modem_server_host),
@@ -81,7 +80,8 @@ def call(
         modem_data.registration_uri,
         modem_data.username,
         modem_data.password,
-    ).add_account(phone_number, sip_uri, sip_reg_uri, sip_username, sip_password)
+    ).add_account(phone_number, sip_uri, sip_reg_uri, sip_username,
+                  sip_password)
     current_call = dialer.dial(phone_number, modem_alias, phone_number)
 
 
