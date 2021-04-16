@@ -215,7 +215,7 @@ class Dialer:
         # End audio activation
 
     def close(self):
-        for call_id in self._calls.keys():
+        for call_id in self._calls:
             self._on_remote_disconnected(call_id, remove=False)
         self._unregister_endpoints()
         print("Closing")
