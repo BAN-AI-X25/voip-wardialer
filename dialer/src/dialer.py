@@ -34,7 +34,8 @@ class Dialer:
 
     def _msisdn_to_uri(self, msisdn: str, account: str):
         return 'sip:{}@{}'.format(
-            msisdn, self.accounts[account]['meta']['registration_uri'].replace('sip:', '')
+            msisdn, self.accounts[account]['meta']['registration_uri'].replace(
+                'sip:', '')
         )
 
     def _get_callback(self, endpoint_type: EndpointType, call_id=None):
@@ -57,7 +58,8 @@ class Dialer:
         self.lib.init(log_cfg=pjsua.LogConfig(level=logging.DEBUG))
         pjsua_port = random.randint(5080, 6080)
         self.transports = dict(
-            t1=self.lib.create_transport(pjsua.TransportType.UDP, pjsua.TransportConfig(pjsua_port))
+            t1=self.lib.create_transport(
+                pjsua.TransportType.UDP, pjsua.TransportConfig(pjsua_port))
         )
         self.lib.start()
         self.lib.handle_events()
@@ -118,9 +120,11 @@ class Dialer:
         reg_status = acc.info().reg_status
         reg_reason = acc.info().reg_reason
         if reg_status != 200:
-            print('Registration failed (%s) status= %s (%s)' % (registration_uri, reg_status, reg_reason))
+            print('Registration failed (%s) status= %s (%s)' %
+                  (registration_uri, reg_status, reg_reason))
             sys.exit(1)
-        print('Registration completed (%s) status= %s (%s)' % (registration_uri, reg_status, reg_reason))
+        print('Registration completed (%s) status= %s (%s)' %
+              (registration_uri, reg_status, reg_reason))
         return acc
 
     def dial(self, msisdn: str, modem: str, account: str) -> types.Call:
