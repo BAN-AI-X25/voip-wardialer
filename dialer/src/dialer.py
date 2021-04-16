@@ -16,7 +16,8 @@ class EndpointType(Enum):
 
 
 class Dialer:
-    def __init__(self, account_cb: pjsua.CallCallback, modem_cb: pjsua.CallCallback):
+    def __init__(self, account_cb: pjsua.CallCallback,
+                 modem_cb: pjsua.CallCallback):
         self.accounts = {}
         self.modems = {}
         self.transports = {}
@@ -29,38 +30,36 @@ class Dialer:
 
     @staticmethod
     def _get_call_id(msisdn: str, modem: str, account: str) -> str:
-        return hashlib.sha256(
-            "{}{}{}".format(msisdn, modem, account).encode()
-        ).hexdigest()
+        return hashlib.sha256("{}{}{}".format(msisdn, modem,
+                                              account).encode()).hexdigest()
 
     def _msisdn_to_uri(self, msisdn: str, account: str):
         return "sip:{}@{}".format(
             msisdn,
-            self.accounts[account]["meta"]["registration_uri"].replace("sip:", ""),
+            self.accounts[account]["meta"]["registration_uri"].replace(
+                "sip:", ""),
         )
 
     def _get_callback(self, endpoint_type: EndpointType, call_id=None):
         return {
-            EndpointType.ACCOUNT: lambda: self._account_cb(
+            EndpointType.ACCOUNT:
+            lambda: self._account_cb(
                 self.lib,
                 on_connect=self._on_remote_connect,
                 on_disconnect=self._on_remote_disconnected,
                 call_id=call_id,
             ),
-            EndpointType.MODEM: lambda: self._modem_cb(
-                self.lib, call_id=call_id, on_connect=self._on_modem_connect
-            ),
+            EndpointType.MODEM:
+            lambda: self._modem_cb(
+                self.lib, call_id=call_id, on_connect=self._on_modem_connect),
         }[endpoint_type]()
 
     def _init_lib(self) -> None:
         self.lib = pjsua.Lib()
         self.lib.init(log_cfg=pjsua.LogConfig(level=logging.DEBUG))
         pjsua_port = random.randint(5080, 6080)
-        self.transports = dict(
-            t1=self.lib.create_transport(
-                pjsua.TransportType.UDP, pjsua.TransportConfig(pjsua_port)
-            )
-        )
+        self.transports = dict(t1=self.lib.create_transport(
+            pjsua.TransportType.UDP, pjsua.TransportConfig(pjsua_port)))
         self.lib.start()
         self.lib.handle_events()
 
@@ -76,10 +75,13 @@ class Dialer:
         print("Adding account")
         assert not self.accounts.get(alias), "Name clash"
         self.accounts[alias] = {
-            "endpoint": self._create_endpoint(
-                account_id, registration_uri, username, password
-            ),
-            "meta": meta or {"registration_uri": registration_uri},
+            "endpoint":
+            self._create_endpoint(account_id, registration_uri, username,
+                                  password),
+            "meta":
+            meta or {
+                "registration_uri": registration_uri
+            },
         }
         return self
 
@@ -96,19 +98,18 @@ class Dialer:
         print("Adding modem")
         assert not self.modems.get(alias), "Name clash"
         self.modems[alias] = {
-            "endpoint": self._create_endpoint(
-                account_id, registration_uri, username, password
-            ),
-            "meta": meta
-            or {
+            "endpoint":
+            self._create_endpoint(account_id, registration_uri, username,
+                                  password),
+            "meta":
+            meta or {
                 "local_uri": local_modem_uri,
             },
         }
         return self
 
-    def _create_endpoint(
-        self, account_id: str, registration_uri: str, username: str, password: str
-    ):
+    def _create_endpoint(self, account_id: str, registration_uri: str,
+                         username: str, password: str):
         class MyAccountCallback(pjsua.AccountCallback):
             sem = None
 
@@ -136,15 +137,11 @@ class Dialer:
         reg_status = acc.info().reg_status
         reg_reason = acc.info().reg_reason
         if reg_status != 200:
-            print(
-                "Registration failed (%s) status= %s (%s)"
-                % (registration_uri, reg_status, reg_reason)
-            )
+            print("Registration failed (%s) status= %s (%s)" %
+                  (registration_uri, reg_status, reg_reason))
             exit(1)
-        print(
-            "Registration completed (%s) status= %s (%s)"
-            % (registration_uri, reg_status, reg_reason)
-        )
+        print("Registration completed (%s) status= %s (%s)" %
+              (registration_uri, reg_status, reg_reason))
         return acc
 
     def dial(self, msisdn: str, modem: str, account: str) -> types.Call:
