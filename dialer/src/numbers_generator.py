@@ -33,7 +33,7 @@ class Range:
     def _parse_string(self, rangestr=None, groups=-1) -> List:
         numbers = []
         skip_next = 0
-        _rstring = rangestr and rangestr or self._range_string
+        _rstring = rangestr if rangestr else self._range_string
         _string = ''
         append = True
         for i, p in enumerate(_rstring):
