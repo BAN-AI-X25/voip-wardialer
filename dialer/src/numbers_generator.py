@@ -10,7 +10,6 @@
 #
 # 1670000[0,3~6][4,8,0,9]OE is a valid syntax.
 #
-
 from ast import literal_eval
 from typing import List
 
