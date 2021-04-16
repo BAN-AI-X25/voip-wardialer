@@ -4,9 +4,12 @@ import pjsua
 
 
 class Account(pjsua.CallCallback):
-    def __init__(
-        self, pjsua_lib, call=None, on_connect=None, on_disconnect=None, call_id=None
-    ):
+    def __init__(self,
+                 pjsua_lib,
+                 call=None,
+                 on_connect=None,
+                 on_disconnect=None,
+                 call_id=None):
         pjsua.CallCallback.__init__(self, call)
         self.pjsua_lib = pjsua_lib
         self.on_disconnect = on_disconnect
