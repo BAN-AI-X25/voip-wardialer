@@ -6,8 +6,8 @@ import threading
 import time
 import typing
 from enum import Enum
-import pjsua
 
+import pjsua
 from src import types
 
 
