@@ -1,4 +1,7 @@
 # voipwardialer
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/fd2564328bf7f7392640/maintainability)](https://codeclimate.com/github/BAN-AI-X25/voip-wardialer/maintainability)
+
 A Voip Wardialer for the phreaking of 2020
 
 To try VoIP Wardialer at this stage of development check it out [INSTALL.md](https://github.com/x25today/voipwardialer/blob/master/INSTALL.md)
